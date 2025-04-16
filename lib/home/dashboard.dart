@@ -73,7 +73,7 @@ class DashBoard extends StatelessWidget {
           showUnselectedLabels: true,
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.white24,
-          backgroundColor: Colors.black,
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           items: List.generate(_navigationButtonsProperties.length, (index) {
             final item = _navigationButtonsProperties[index];
             return BottomNavigationBarItem(

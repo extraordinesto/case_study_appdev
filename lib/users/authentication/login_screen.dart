@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:feature_app/api_connection/api_connection.dart';
+import 'package:feature_app/components/textfield.dart';
 import 'package:feature_app/home/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -46,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
           });
         } else {
           Fluttertoast.showToast(
-            msg: "Incorrect Username or Password. Try Again.",
+            msg: "Incorrect Username or Password. \n\t\t\t\t\t\tTry Again.",
           );
         }
       }
@@ -102,99 +103,49 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Column(
                             children: [
                               // Email
-                              TextFormField(
-                                controller: emailController,
+                              MyTextField(
+                                hintText: "Username",
                                 validator:
                                     (val) =>
                                         val == "" ? "Please write email" : null,
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.email,
-                                    color: Colors.black45,
-                                  ),
-                                  hintText: "Email",
-                                  hintStyle: TextStyle(
-                                    color:
-                                        Theme.of(
-                                          context,
-                                        ).colorScheme.inversePrimary,
-                                  ),
-                                  border: InputBorder.none,
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      width: 2,
-                                      color:
-                                          Theme.of(
-                                            context,
-                                          ).colorScheme.inversePrimary,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  contentPadding: EdgeInsets.symmetric(),
+                                controller: emailController,
+                                prefixicon: Icon(
+                                  Icons.email,
+                                  color: Colors.black45,
                                 ),
+                                suffixIcon: null,
+                                isObsecure: false,
                               ),
 
                               SizedBox(height: 10),
 
                               // Password
                               Obx(
-                                () => TextFormField(
-                                  controller: passwordController,
-                                  obscureText: isObsecure.value,
+                                () => MyTextField(
+                                  hintText: "Password",
+                                  isObsecure: isObsecure.value,
                                   validator:
                                       (val) =>
                                           val == ""
                                               ? "Please write password"
                                               : null,
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.lock,
-                                      color: Colors.black45,
-                                    ),
-                                    suffixIcon: Obx(
-                                      () => GestureDetector(
-                                        onTap: () {
-                                          isObsecure.value = !isObsecure.value;
-                                        },
-                                        child: Icon(
-                                          isObsecure.value
-                                              ? Icons.visibility_off
-                                              : Icons.visibility,
-                                          color: Colors.black45,
-                                        ),
+                                  controller: passwordController,
+                                  prefixicon: Icon(
+                                    Icons.lock,
+                                    color: Colors.black45,
+                                  ),
+                                  suffixIcon: Obx(
+                                    () => GestureDetector(
+                                      onTap: () {
+                                        isObsecure.value = !isObsecure.value;
+                                      },
+                                      child: Icon(
+                                        isObsecure.value
+                                            ? Icons.visibility_off
+                                            : Icons.visibility,
+                                        color: Colors.black45,
                                       ),
                                     ),
-                                    hintText: "Password",
-                                    hintStyle: TextStyle(
-                                      color:
-                                          Theme.of(
-                                            context,
-                                          ).colorScheme.inversePrimary,
-                                    ),
-                                    border: InputBorder.none,
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        width: 2,
-                                        color:
-                                            Theme.of(
-                                              context,
-                                            ).colorScheme.inversePrimary,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    contentPadding: EdgeInsets.symmetric(),
                                   ),
                                 ),
                               ),
@@ -225,7 +176,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                         child: Text(
                                           'Log In',
                                           style: TextStyle(
-                                            color: Colors.grey.shade800,
                                             fontSize: 20,
                                             fontWeight: FontWeight.w500,
                                           ),

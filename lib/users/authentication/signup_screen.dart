@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:feature_app/api_connection/api_connection.dart';
+import 'package:feature_app/components/textfield.dart';
 import 'package:feature_app/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -67,7 +68,7 @@ class _SignupScreenState extends State<SignupScreen> {
         var resBodyOfSignUp = jsonDecode(res.body);
 
         if (resBodyOfSignUp['success'] == true) {
-          Fluttertoast.showToast(msg: "SignUp Successfully.");
+          Fluttertoast.showToast(msg: "Sign Up Successfully.");
 
           setState(() {
             nameController.clear();
@@ -131,140 +132,66 @@ class _SignupScreenState extends State<SignupScreen> {
                           child: Column(
                             children: [
                               // Name
-                              TextFormField(
+                              MyTextField(
+                                hintText: "Name",
                                 controller: nameController,
+                                prefixicon: Icon(
+                                  Icons.person,
+                                  color: Colors.black45,
+                                ),
+                                suffixIcon: null,
                                 validator:
                                     (val) =>
                                         val == "" ? "Please write name" : null,
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.person,
-                                    color: Colors.black45,
-                                  ),
-                                  hintText: "Name",
-                                  hintStyle: TextStyle(
-                                    color:
-                                        Theme.of(
-                                          context,
-                                        ).colorScheme.inversePrimary,
-                                  ),
-                                  border: InputBorder.none,
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      width: 2,
-                                      color:
-                                          Theme.of(
-                                            context,
-                                          ).colorScheme.inversePrimary,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  contentPadding: EdgeInsets.symmetric(),
-                                ),
+                                isObsecure: false,
                               ),
 
                               SizedBox(height: 10),
 
                               // Email
-                              TextFormField(
+                              MyTextField(
+                                hintText: "Email",
                                 controller: emailController,
+                                prefixicon: Icon(
+                                  Icons.email,
+                                  color: Colors.black45,
+                                ),
+                                suffixIcon: null,
                                 validator:
                                     (val) =>
                                         val == "" ? "Please write email" : null,
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.email,
-                                    color: Colors.black45,
-                                  ),
-                                  hintText: "Email",
-                                  hintStyle: TextStyle(
-                                    color:
-                                        Theme.of(
-                                          context,
-                                        ).colorScheme.inversePrimary,
-                                  ),
-                                  border: InputBorder.none,
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      width: 2,
-                                      color:
-                                          Theme.of(
-                                            context,
-                                          ).colorScheme.inversePrimary,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  contentPadding: EdgeInsets.symmetric(),
-                                ),
+                                isObsecure: false,
                               ),
 
                               SizedBox(height: 10),
 
                               // Password
                               Obx(
-                                () => TextFormField(
-                                  controller: passwordController,
-                                  obscureText: isObsecure.value,
+                                () => MyTextField(
+                                  hintText: "Password",
+                                  isObsecure: isObsecure.value,
                                   validator:
                                       (val) =>
                                           val == ""
                                               ? "Please write password"
                                               : null,
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.lock,
-                                      color: Colors.black45,
-                                    ),
-                                    suffixIcon: Obx(
-                                      () => GestureDetector(
-                                        onTap: () {
-                                          isObsecure.value = !isObsecure.value;
-                                        },
-                                        child: Icon(
-                                          isObsecure.value
-                                              ? Icons.visibility_off
-                                              : Icons.visibility,
-                                          color: Colors.black45,
-                                        ),
+                                  controller: passwordController,
+                                  prefixicon: Icon(
+                                    Icons.lock,
+                                    color: Colors.black45,
+                                  ),
+                                  suffixIcon: Obx(
+                                    () => GestureDetector(
+                                      onTap: () {
+                                        isObsecure.value = !isObsecure.value;
+                                      },
+                                      child: Icon(
+                                        isObsecure.value
+                                            ? Icons.visibility_off
+                                            : Icons.visibility,
+                                        color: Colors.black45,
                                       ),
                                     ),
-                                    hintText: "Password",
-                                    hintStyle: TextStyle(
-                                      color:
-                                          Theme.of(
-                                            context,
-                                          ).colorScheme.inversePrimary,
-                                    ),
-                                    border: InputBorder.none,
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        width: 2,
-                                        color:
-                                            Theme.of(
-                                              context,
-                                            ).colorScheme.inversePrimary,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    contentPadding: EdgeInsets.symmetric(),
                                   ),
                                 ),
                               ),
