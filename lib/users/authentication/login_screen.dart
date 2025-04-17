@@ -109,10 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     (val) =>
                                         val == "" ? "Please write email" : null,
                                 controller: emailController,
-                                prefixicon: Icon(
-                                  Icons.email,
-                                  color: Colors.black45,
-                                ),
+                                prefixicon: Icon(Icons.email),
                                 suffixIcon: null,
                                 isObsecure: false,
                               ),
@@ -130,10 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                               ? "Please write password"
                                               : null,
                                   controller: passwordController,
-                                  prefixicon: Icon(
-                                    Icons.lock,
-                                    color: Colors.black45,
-                                  ),
+                                  prefixicon: Icon(Icons.lock),
                                   suffixIcon: Obx(
                                     () => GestureDetector(
                                       onTap: () {
@@ -143,7 +137,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                         isObsecure.value
                                             ? Icons.visibility_off
                                             : Icons.visibility,
-                                        color: Colors.black45,
                                       ),
                                     ),
                                   ),

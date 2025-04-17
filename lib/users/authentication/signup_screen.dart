@@ -135,10 +135,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               MyTextField(
                                 hintText: "Name",
                                 controller: nameController,
-                                prefixicon: Icon(
-                                  Icons.person,
-                                  color: Colors.black45,
-                                ),
+                                prefixicon: Icon(Icons.person),
                                 suffixIcon: null,
                                 validator:
                                     (val) =>
@@ -152,10 +149,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               MyTextField(
                                 hintText: "Email",
                                 controller: emailController,
-                                prefixicon: Icon(
-                                  Icons.email,
-                                  color: Colors.black45,
-                                ),
+                                prefixicon: Icon(Icons.email),
                                 suffixIcon: null,
                                 validator:
                                     (val) =>
@@ -176,10 +170,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                               ? "Please write password"
                                               : null,
                                   controller: passwordController,
-                                  prefixicon: Icon(
-                                    Icons.lock,
-                                    color: Colors.black45,
-                                  ),
+                                  prefixicon: Icon(Icons.lock),
                                   suffixIcon: Obx(
                                     () => GestureDetector(
                                       onTap: () {
@@ -189,7 +180,6 @@ class _SignupScreenState extends State<SignupScreen> {
                                         isObsecure.value
                                             ? Icons.visibility_off
                                             : Icons.visibility,
-                                        color: Colors.black45,
                                       ),
                                     ),
                                   ),
@@ -222,7 +212,6 @@ class _SignupScreenState extends State<SignupScreen> {
                                         child: Text(
                                           'Sign Up',
                                           style: TextStyle(
-                                            color: Colors.grey.shade800,
                                             fontSize: 20,
                                             fontWeight: FontWeight.w500,
                                           ),

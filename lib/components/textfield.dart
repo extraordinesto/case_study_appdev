@@ -28,36 +28,34 @@ class MyTextField extends StatelessWidget {
         prefixIcon: prefixicon,
         hintText: hintText,
         suffixIcon: suffixIcon,
-        hintStyle: TextStyle(
-          color: Theme.of(context).colorScheme.inversePrimary,
-        ),
+        hintStyle: TextStyle(color: Colors.grey[500]),
         errorStyle: TextStyle(
           color: Colors.red,
           fontSize: 12,
           fontWeight: FontWeight.w500,
         ),
-        border: InputBorder.none,
-        filled: true,
-        fillColor: Colors.white,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            width: 2,
-            color: Theme.of(context).colorScheme.inversePrimary,
-          ),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(width: 2, color: Colors.red.shade200),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(width: 2, color: Colors.red.shade400),
-          borderRadius: BorderRadius.circular(8),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+        // filled: true,
+        // fillColor: Colors.white,
+        // enabledBorder: OutlineInputBorder(
+        //   borderSide: BorderSide.none,
+        //   borderRadius: BorderRadius.circular(8),
+        // ),
+        // focusedBorder: OutlineInputBorder(
+        //   borderSide: BorderSide(
+        //     width: 2,
+        //     color: Theme.of(context).colorScheme.inversePrimary,
+        //   ),
+        //   borderRadius: BorderRadius.circular(8),
+        // ),
+        // errorBorder: OutlineInputBorder(
+        //   borderSide: BorderSide(width: 2, color: Colors.red.shade200),
+        //   borderRadius: BorderRadius.circular(8),
+        // ),
+        // focusedErrorBorder: OutlineInputBorder(
+        //   borderSide: BorderSide(width: 2, color: Colors.red.shade400),
+        //   borderRadius: BorderRadius.circular(8),
+        // ),
         contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
     );

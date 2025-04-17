@@ -17,8 +17,8 @@ class DashBoard extends StatelessWidget {
       "widget": DisplayProduct(),
     },
     {
-      "active_icon": Icons.scanner,
-      "non_active_icon": Icons.scanner_outlined,
+      "active_icon": Icons.qr_code_scanner,
+      "non_active_icon": Icons.qr_code_scanner_outlined,
       "label": "Scan",
       "widget": ScanProduct(),
     },
@@ -36,18 +36,36 @@ class DashBoard extends StatelessWidget {
       Get.defaultDialog(
         titlePadding: EdgeInsets.only(top: 15),
         title: "Confirm Logout",
+        backgroundColor: Theme.of(context).colorScheme.background,
+        confirmTextColor: Theme.of(context).colorScheme.onSecondary,
         middleText: "Are you sure you want to logout?",
-        confirm: TextButton(
-          onPressed: () {
-            Future.delayed(Duration(milliseconds: 1000), () {
-              Get.to(LoginScreen()); // or your logout route
-            });
-          },
-          child: Text("Yes", style: TextStyle(color: Colors.black)),
+        confirm: Padding(
+          padding: const EdgeInsets.only(left: 20),
+          child: TextButton(
+            onPressed: () {
+              Future.delayed(Duration(milliseconds: 1000), () {
+                Get.to(LoginScreen()); // or your logout route
+              });
+            },
+            child: Text(
+              "Yes",
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSecondary,
+              ),
+            ),
+          ),
         ),
-        cancel: TextButton(
-          onPressed: () => Get.back(),
-          child: Text("No", style: TextStyle(color: Colors.black)),
+        cancel: Padding(
+          padding: const EdgeInsets.only(right: 20),
+          child: TextButton(
+            onPressed: () => Get.back(),
+            child: Text(
+              "No",
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSecondary,
+              ),
+            ),
+          ),
         ),
       );
     } else {
@@ -71,9 +89,9 @@ class DashBoard extends StatelessWidget {
           onTap: (value) => _handleNavigation(value, context),
           showSelectedLabels: true,
           showUnselectedLabels: true,
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.white24,
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          selectedItemColor: Theme.of(context).colorScheme.onSecondary,
+          unselectedItemColor: Theme.of(context).colorScheme.onTertiary,
+          backgroundColor: Theme.of(context).colorScheme.background,
           items: List.generate(_navigationButtonsProperties.length, (index) {
             final item = _navigationButtonsProperties[index];
             return BottomNavigationBarItem(
