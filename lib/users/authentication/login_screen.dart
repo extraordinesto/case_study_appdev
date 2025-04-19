@@ -27,10 +27,13 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       var res = await http.post(
         Uri.parse(API.login),
-        body: {
+        headers: {
+          "Content-Type": "application/json", // This header is necessary
+        },
+        body: jsonEncode({
           "username": emailController.text.trim(),
           "password": passwordController.text.trim(),
-        },
+        }),
       );
 
       if (res.statusCode == 200) {

@@ -28,7 +28,10 @@ class _SignupScreenState extends State<SignupScreen> {
     try {
       var res = await http.post(
         Uri.parse(API.validateEmail),
-        body: {'username': emailController.text.trim()},
+        headers: {
+          "Content-Type": "application/json", // This header is necessary
+        },
+        body: jsonEncode({'username': emailController.text.trim()}),
       );
       if (res.statusCode == 200) {
         // From FLutter app the connection success with API
@@ -36,7 +39,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
         if (resBodyOfValidateEmail['usernameFound'] == true) {
           Fluttertoast.showToast(
-            msg: 'Username is already use. Try anothe username',
+            msg: 'Username is already use. Try another username',
           );
         } else {
           //register & save new user record to database
@@ -61,7 +64,10 @@ class _SignupScreenState extends State<SignupScreen> {
     try {
       var res = await http.post(
         Uri.parse(API.signUp),
-        body: userModel.toJson(),
+        headers: {
+          "Content-Type": "application/json", // This header is necessary
+        },
+        body: jsonEncode(userModel.toJson()),
       );
 
       if (res.statusCode == 200) {
