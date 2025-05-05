@@ -1,4 +1,5 @@
 import 'package:feature_app/home/display_product.dart';
+import 'package:feature_app/home/generateqr.dart';
 import 'package:feature_app/home/scan.dart';
 import 'package:feature_app/users/authentication/login_screen.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,12 @@ class DashBoard extends StatelessWidget {
       "non_active_icon": Icons.qr_code_scanner_outlined,
       "label": "Scan",
       "widget": ScanProduct(),
+    },
+    {
+      "active_icon": Icons.qr_code,
+      "non_active_icon": Icons.qr_code_outlined,
+      "label": "QR Code",
+      "widget": GenerateQRCodePage(),
     },
     {
       "active_icon": Icons.logout,

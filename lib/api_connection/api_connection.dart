@@ -7,4 +7,5 @@ class API {
   static const signUp = "$hostConnect/signup";
   static const login = "$hostConnect/login";
   static const product = "$hostConnect/item";
+  static const customer = "$hostConnect/customer";
 }

@@ -147,6 +147,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                     (val) =>
                                         val == "" ? "Please write name" : null,
                                 isObsecure: false,
+                                keyboardType: null,
+                                enabled: true,
                               ),
 
                               SizedBox(height: 10),
@@ -161,6 +163,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                     (val) =>
                                         val == "" ? "Please write email" : null,
                                 isObsecure: false,
+                                keyboardType: null,
+                                enabled: true,
                               ),
 
                               SizedBox(height: 10),
@@ -189,6 +193,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                       ),
                                     ),
                                   ),
+                                  keyboardType: null,
+                                  enabled: true,
                                 ),
                               ),
 

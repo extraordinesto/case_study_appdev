@@ -115,6 +115,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 prefixicon: Icon(Icons.email),
                                 suffixIcon: null,
                                 isObsecure: false,
+                                keyboardType: null,
+                                enabled: true,
                               ),
 
                               SizedBox(height: 10),
@@ -143,6 +145,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     ),
                                   ),
+                                  keyboardType: null,
+                                  enabled: true,
                                 ),
                               ),
 
