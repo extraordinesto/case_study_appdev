@@ -21,7 +21,7 @@ class DashBoard extends StatelessWidget {
       "active_icon": Icons.qr_code_scanner,
       "non_active_icon": Icons.qr_code_scanner_outlined,
       "label": "Scan",
-      "widget": ScanProduct(),
+      "widget": QRScannerScreen(),
     },
     {
       "active_icon": Icons.qr_code,
