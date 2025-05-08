@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:feature_app/api_connection/api_connection.dart';
 import 'package:feature_app/components/textfield.dart';
 import 'package:flutter/material.dart';
@@ -21,12 +20,13 @@ class _GenerateQRCodePageState extends State<OutGenerateQRCodePage> {
   TextEditingController unitPriceController = TextEditingController();
 
   String? qrData;
-  String transactionType = 'OUT'; // default
+  String transactionType = 'OUT';
   String? selectedCustomer;
   String? selectedItem;
 
   List customerData = [];
   List itemData = [];
+  List<Map<String, String>> products = []; // List to store multiple products
 
   Future<void> getrecord() async {
     try {
@@ -46,6 +46,34 @@ class _GenerateQRCodePageState extends State<OutGenerateQRCodePage> {
   void initState() {
     getrecord();
     super.initState();
+  }
+
+  void addProductToList() {
+    final item = {
+      "itemNumber": itemNumberController.text,
+      "itemName": itemNameController.text,
+      "discount": discountController.text,
+      "quantity": quantityController.text,
+      "unitPrice": unitPriceController.text,
+      "customerID": customerIDController.text,
+      "customerName": customerNameController.text,
+      "type": transactionType,
+    };
+
+    if (item.values.any((val) => val.isEmpty)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please fill in all fields")),
+      );
+    } else {
+      setState(() {
+        products.add(item); // Add the product to the list
+        itemNumberController.clear();
+        itemNameController.clear();
+        discountController.clear();
+        quantityController.clear();
+        unitPriceController.clear();
+      });
+    }
   }
 
   @override
@@ -82,7 +110,6 @@ class _GenerateQRCodePageState extends State<OutGenerateQRCodePage> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                // Ensure selectedItem is not null before using it.
                 value:
                     selectedCustomer?.isNotEmpty == true
                         ? selectedCustomer
@@ -95,7 +122,6 @@ class _GenerateQRCodePageState extends State<OutGenerateQRCodePage> {
                         child: Text(name),
                       );
                     }).toList(),
-
                 onChanged: (value) {
                   setState(() {
                     selectedCustomer = value ?? '';
@@ -210,53 +236,16 @@ class _GenerateQRCodePageState extends State<OutGenerateQRCodePage> {
               SizedBox(
                 width: double.infinity,
                 child: Material(
-                  color:
-                      Theme.of(context).colorScheme.primary, // Set button color
-                  borderRadius: BorderRadius.circular(8), // Set border radius
+                  color: Theme.of(context).colorScheme.primary,
+                  borderRadius: BorderRadius.circular(8),
                   child: InkWell(
-                    onTap: () {
-                      final itemNumber = itemNumberController.text;
-                      final customerID = customerIDController.text;
-                      final customerName = customerNameController.text;
-                      final itemName = itemNameController.text;
-                      final discount = discountController.text;
-                      final stock = quantityController.text;
-                      final unitPrice = unitPriceController.text;
-
-                      if (customerName.isNotEmpty &&
-                          itemName.isNotEmpty &&
-                          discount.isNotEmpty &&
-                          stock.isNotEmpty &&
-                          unitPrice.isNotEmpty) {
-                        setState(() {
-                          qrData = jsonEncode({
-                            "itemNumber": itemNumber,
-                            "customerID": customerID,
-                            "customerName": customerName,
-                            "itemName": itemName,
-                            "discount": discount,
-                            "quantity": stock,
-                            "unitPrice": unitPrice,
-                            "type": transactionType,
-                          });
-                        });
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Please fill in all fields"),
-                          ),
-                        );
-                      }
-                    },
+                    onTap: addProductToList, // Add product to list
                     borderRadius: BorderRadius.circular(8),
                     child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 16,
-                      ),
+                      padding: EdgeInsets.symmetric(vertical: 12),
                       child: Center(
                         child: Text(
-                          'Generate QR Code',
+                          'Add Product',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
@@ -267,6 +256,65 @@ class _GenerateQRCodePageState extends State<OutGenerateQRCodePage> {
                   ),
                 ),
               ),
+
+              SizedBox(height: 10),
+
+              if (products.isNotEmpty)
+                SizedBox(
+                  width: double.infinity,
+                  child: Material(
+                    color: Theme.of(context).colorScheme.primary,
+                    borderRadius: BorderRadius.circular(8),
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          qrData = jsonEncode({"products": products});
+                        });
+                      },
+                      borderRadius: BorderRadius.circular(8),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        child: Center(
+                          child: Text(
+                            'Generate QR Code',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+              SizedBox(height: 20),
+
+              if (products.isNotEmpty)
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: products.length,
+                    itemBuilder: (context, index) {
+                      final product = products[index];
+                      return ListTile(
+                        title: Text(product["itemName"]!),
+                        subtitle: Text(
+                          "Qty: ${product["quantity"]} - Price: ${product["unitPrice"]}",
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () {
+                            setState(() {
+                              products.removeAt(
+                                index,
+                              ); // Remove product from the list
+                            });
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
             ] else ...[
               Center(
                 child: QrImageView(
@@ -288,13 +336,7 @@ class _GenerateQRCodePageState extends State<OutGenerateQRCodePage> {
                     onTap: () {
                       setState(() {
                         qrData = null;
-                        customerIDController.clear();
-                        itemNumberController.clear();
-                        customerNameController.clear();
-                        itemNameController.clear();
-                        discountController.clear();
-                        quantityController.clear();
-                        unitPriceController.clear();
+                        products.clear();
                       });
                     },
                     borderRadius: BorderRadius.circular(8),

@@ -17,12 +17,17 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
   final MobileScannerController cameraController = MobileScannerController();
   List<Map<String, dynamic>> scannedProducts = [];
 
-  Future<void> processTransaction(Map<String, dynamic> qrdata) async {
+  Future<void> processTransaction(
+    Map<String, dynamic> qrdata, {
+    required bool isOut,
+  }) async {
     try {
+      final body = {...qrdata, 'transactionType': isOut ? 'OUT' : 'IN'};
+
       final response = await http.post(
         Uri.parse(API.transaction),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(qrdata),
+        body: jsonEncode(body),
       );
 
       if (response.statusCode == 200) {
@@ -72,11 +77,11 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
     final extraInfo =
         scannedItem != null
             ? '\n\nScanned Item:\n'
-                '• Item No: ${scannedItem['itemNumber']}\n'
-                '• Name: ${scannedItem['itemName']}\n'
-                '• Qty: ${scannedItem['quantity']}\n'
-                '• Price: ₱${scannedItem['unitPrice']}\n'
-                '• Type: ${scannedItem['type']}'
+                '• Item No: ${scannedItem['itemNumber'] ?? 'N/A'}\n'
+                '• Name: ${scannedItem['itemName'] ?? 'N/A'}\n'
+                '• Qty: ${scannedItem['quantity'] ?? scannedItem['stock'] ?? 'N/A'}\n'
+                '• Price: ₱${scannedItem['unitPrice'] ?? 'N/A'}\n'
+                '• Type: ${scannedItem['type'] ?? 'N/A'}'
             : '';
 
     showDialog(
@@ -111,7 +116,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Generate QR Code"),
+        title: const Text("Scan QR Code"),
         backgroundColor: Theme.of(context).colorScheme.background,
         foregroundColor: Theme.of(context).colorScheme.onSecondary,
         elevation: 1,
@@ -131,16 +136,50 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
               if (raw == null) return;
 
               try {
-                final Map<String, dynamic> parsed = Map<String, dynamic>.from(
-                  jsonDecode(raw),
-                );
+                final parsed = jsonDecode(raw);
+                print("Scanned QR data: $parsed");
 
-                if (parsed.containsKey('type')) {
-                  setState(() => isScanning = false);
-                  cameraController.stop();
-                  await processTransaction(parsed);
+                setState(() => isScanning = false);
+                cameraController.stop();
+
+                if (parsed is Map<String, dynamic>) {
+                  // Single product
+                  if (parsed.containsKey('type')) {
+                    final type = parsed['type'];
+                    if (type == 'OUT') {
+                      await processTransaction(parsed, isOut: true);
+                    } else if (type == 'IN') {
+                      await processTransaction(parsed, isOut: false);
+                    } else {
+                      _showDialog('Invalid QR', 'Unknown transaction type.');
+                    }
+                  }
+                  // Multiple products
+                  else if (parsed.containsKey('products') &&
+                      parsed['products'] is List) {
+                    for (var item in parsed['products']) {
+                      if (item is Map<String, dynamic> &&
+                          item.containsKey('type')) {
+                        final isOut = item['type'] == 'OUT';
+                        await processTransaction(
+                          Map<String, dynamic>.from(item),
+                          isOut: isOut,
+                        );
+                      } else {
+                        _showDialog(
+                          'Invalid Product',
+                          'One or more items lack a transaction type.',
+                        );
+                      }
+                    }
+                  } else {
+                    _showDialog(
+                      'Invalid QR',
+                      'Missing transaction type or product list.',
+                    );
+                  }
                 } else {
-                  _showDialog('Invalid QR', 'Missing transaction type.');
+                  _showDialog('Invalid Format', 'QR code is not valid JSON.');
                 }
               } catch (e) {
                 _showDialog('Invalid Data', 'QR Code is not valid JSON.\n$e');
@@ -152,7 +191,6 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
           Center(
             child: Stack(
               children: [
-                // Blur outside the box
                 ColorFiltered(
                   colorFilter: ColorFilter.mode(
                     Colors.black54,
@@ -178,8 +216,6 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                     ],
                   ),
                 ),
-
-                // Border for scan box
                 Center(
                   child: Container(
                     width: scanBoxSize,

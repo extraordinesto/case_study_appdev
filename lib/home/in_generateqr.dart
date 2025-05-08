@@ -1,3 +1,4 @@
+// Add this import at the top
 import 'dart:convert';
 
 import 'package:feature_app/components/textfield.dart';
@@ -19,7 +20,39 @@ class _GenerateQRCodePageState extends State<InGenerateQRCodePage> {
   final TextEditingController statusController = TextEditingController();
 
   String? qrData;
-  String transactionType = 'IN'; // default
+  String transactionType = 'IN';
+  List<Map<String, String>> products = [];
+
+  void addProductToList() {
+    final item = {
+      "itemNumber": itemNumberController.text,
+      "itemName": itemNameController.text,
+      "discount": discountController.text,
+      "stock": stockController.text,
+      "unitPrice": unitPriceController.text,
+      "status": statusController.text,
+      "description": descriptionController.text,
+      "type": transactionType,
+    };
+
+    if (item.values.any((val) => val.isEmpty)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please fill in all fields")),
+      );
+    } else {
+      setState(() {
+        products.add(item);
+        // Clear form after adding
+        itemNumberController.clear();
+        itemNameController.clear();
+        discountController.clear();
+        stockController.clear();
+        unitPriceController.clear();
+        statusController.clear();
+        descriptionController.clear();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +61,7 @@ class _GenerateQRCodePageState extends State<InGenerateQRCodePage> {
         title: const Text("Generate QR Code"),
         backgroundColor: Theme.of(context).colorScheme.background,
         foregroundColor: Theme.of(context).colorScheme.onSecondary,
-        elevation: 1,
         centerTitle: true,
-        automaticallyImplyLeading: true,
       ),
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Padding(
@@ -43,183 +74,178 @@ class _GenerateQRCodePageState extends State<InGenerateQRCodePage> {
                 controller: itemNumberController,
                 prefixicon: null,
                 suffixIcon: null,
-                validator: (val) => val == "" ? "Please write name" : null,
+                validator: (val) => val == "" ? "Required" : null,
                 isObsecure: false,
                 keyboardType: TextInputType.number,
                 enabled: true,
               ),
-
               SizedBox(height: 10),
-
               MyTextField(
                 hintText: "Item Name",
                 controller: itemNameController,
                 prefixicon: null,
                 suffixIcon: null,
-                validator: (val) => val == "" ? "Please write name" : null,
-                isObsecure: false,
                 keyboardType: null,
+                validator: (val) => val == "" ? "Required" : null,
+                isObsecure: false,
                 enabled: true,
               ),
-
               SizedBox(height: 10),
-
-              SizedBox(
-                width: double.infinity,
-                child: DropdownButtonFormField<String>(
-                  value:
-                      statusController.text.isEmpty
-                          ? null
-                          : statusController.text,
-                  hint: Text("Select status"),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      statusController.text = newValue!;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    hintStyle: TextStyle(color: Colors.grey[500]),
-                    errorStyle: TextStyle(
-                      color: Colors.red,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 14,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+              DropdownButtonFormField<String>(
+                value:
+                    statusController.text.isEmpty
+                        ? null
+                        : statusController.text,
+                hint: Text("Select status"),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    statusController.text = newValue!;
+                  });
+                },
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
                   ),
-                  items:
-                      <String>['Active', 'Disable'].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
+                items:
+                    <String>['Active', 'Disable'].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
               ),
-
               SizedBox(height: 10),
-
               MyTextField(
                 hintText: "Description",
                 controller: descriptionController,
                 prefixicon: null,
                 suffixIcon: null,
-                validator:
-                    (val) => val == "" ? "Please write description" : null,
-                isObsecure: false,
                 keyboardType: null,
+                validator: (val) => val == "" ? "Required" : null,
+                isObsecure: false,
                 enabled: true,
               ),
-
               SizedBox(height: 10),
-
               MyTextField(
                 hintText: "Discount %",
                 controller: discountController,
-                prefixicon: null,
-                suffixIcon: null,
-                validator: (val) => val == "" ? "Please write discount" : null,
+                validator: (val) => val == "" ? "Required" : null,
                 isObsecure: false,
                 keyboardType: TextInputType.number,
+                prefixicon: null,
+                suffixIcon: null,
                 enabled: true,
               ),
-
               SizedBox(height: 10),
-
               MyTextField(
                 hintText: "Quantity",
                 controller: stockController,
-                prefixicon: null,
-                suffixIcon: null,
-                validator: (val) => val == "" ? "Please write quantity" : null,
+                validator: (val) => val == "" ? "Required" : null,
                 isObsecure: false,
                 keyboardType: TextInputType.number,
+                prefixicon: null,
+                suffixIcon: null,
                 enabled: true,
               ),
-
               SizedBox(height: 10),
-
               MyTextField(
                 hintText: "Unit Price",
                 controller: unitPriceController,
-                prefixicon: null,
-                suffixIcon: null,
-                validator:
-                    (val) => val == "" ? "Please write Unit Price" : null,
+                validator: (val) => val == "" ? "Required" : null,
                 isObsecure: false,
                 keyboardType: TextInputType.number,
+                prefixicon: null,
+                suffixIcon: null,
                 enabled: true,
               ),
-
               SizedBox(height: 20),
-
-              SizedBox(
-                width: double.infinity,
-                child: Material(
-                  color:
-                      Theme.of(context).colorScheme.primary, // Set button color
-                  borderRadius: BorderRadius.circular(8), // Set border radius
-                  child: InkWell(
-                    onTap: () {
-                      final itemNumber = itemNumberController.text;
-                      final itemName = itemNameController.text;
-                      final status = statusController.text;
-                      final description = descriptionController.text;
-                      final discount = discountController.text;
-                      final stock = stockController.text;
-                      final unitPrice = unitPriceController.text;
-
-                      if (itemNumber.isNotEmpty &&
-                          itemName.isNotEmpty &&
-                          status.isNotEmpty &&
-                          description.isNotEmpty &&
-                          discount.isNotEmpty &&
-                          stock.isNotEmpty &&
-                          unitPrice.isNotEmpty) {
-                        setState(() {
-                          qrData = jsonEncode({
-                            "itemNumber": itemNumber,
-                            "itemName": itemName,
-                            "discount": discount,
-                            "stock": stock,
-                            "unitPrice": unitPrice,
-                            "status": status,
-                            "description": description,
-                            "type": transactionType,
-                          });
-                        });
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Please fill in all fields"),
-                          ),
-                        );
-                      }
-                    },
-                    borderRadius: BorderRadius.circular(8),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 16,
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Generate QR Code',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
+              Column(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: Material(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: BorderRadius.circular(8),
+                      child: InkWell(
+                        onTap: addProductToList,
+                        borderRadius: BorderRadius.circular(8),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: Center(
+                            child: Text(
+                              'Add Product',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
+                  SizedBox(height: 10),
+                  if (products.isNotEmpty)
+                    SizedBox(
+                      width: double.infinity,
+                      child: Material(
+                        color: Theme.of(context).colorScheme.primary,
+                        borderRadius: BorderRadius.circular(8),
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              qrData = jsonEncode({"products": products});
+                            });
+                          },
+                          borderRadius: BorderRadius.circular(8),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 12),
+                            child: Center(
+                              child: Text(
+                                'Generate QR Code',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
               ),
+
+              SizedBox(height: 20),
+
+              if (products.isNotEmpty)
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: products.length,
+                    itemBuilder: (context, index) {
+                      final product = products[index];
+                      return ListTile(
+                        title: Text(product["itemName"]!),
+                        subtitle: Text(
+                          "Qty: ${product["stock"]} - Price: ${product["unitPrice"]}",
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () {
+                            setState(() {
+                              products.removeAt(index);
+                            });
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
             ] else ...[
               Center(
                 child: QrImageView(
@@ -229,9 +255,7 @@ class _GenerateQRCodePageState extends State<InGenerateQRCodePage> {
                   backgroundColor: Colors.white,
                 ),
               ),
-
               SizedBox(height: 15),
-
               SizedBox(
                 width: double.infinity,
                 child: Material(
@@ -241,13 +265,7 @@ class _GenerateQRCodePageState extends State<InGenerateQRCodePage> {
                     onTap: () {
                       setState(() {
                         qrData = null; // Reset the QR data
-                        itemNumberController.clear(); // Clear item number
-                        itemNameController.clear(); // Clear item name
-                        statusController.clear(); // Clear status
-                        descriptionController.clear(); // Clear description
-                        discountController.clear(); // Clear discount
-                        stockController.clear(); // Clear quantity
-                        unitPriceController.clear(); // Clear unit price
+                        products.clear(); // Clear the product list
                       });
                     },
                     borderRadius: BorderRadius.circular(8),
