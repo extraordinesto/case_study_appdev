@@ -18,6 +18,7 @@ class _GenerateQRCodePageState extends State<InGenerateQRCodePage> {
   final TextEditingController unitPriceController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController statusController = TextEditingController();
+  final TextEditingController imageURLController = TextEditingController();
 
   String? qrData;
   String transactionType = 'IN';
@@ -32,6 +33,7 @@ class _GenerateQRCodePageState extends State<InGenerateQRCodePage> {
       "unitPrice": unitPriceController.text,
       "status": statusController.text,
       "description": descriptionController.text,
+      "imageURL": imageURLController.text,
       "type": transactionType,
     };
 
@@ -50,6 +52,7 @@ class _GenerateQRCodePageState extends State<InGenerateQRCodePage> {
         unitPriceController.clear();
         statusController.clear();
         descriptionController.clear();
+        imageURLController.clear();
       });
     }
   }
@@ -159,6 +162,17 @@ class _GenerateQRCodePageState extends State<InGenerateQRCodePage> {
                 validator: (val) => val == "" ? "Required" : null,
                 isObsecure: false,
                 keyboardType: TextInputType.number,
+                prefixicon: null,
+                suffixIcon: null,
+                enabled: true,
+              ),
+              SizedBox(height: 10),
+              MyTextField(
+                hintText: "Image URL",
+                controller: imageURLController,
+                validator: (val) => val == "" ? "Required" : null,
+                isObsecure: false,
+                keyboardType: null,
                 prefixicon: null,
                 suffixIcon: null,
                 enabled: true,

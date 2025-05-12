@@ -57,7 +57,9 @@ class _DisplayProductState extends State<DisplayProduct> {
           final id = item["itemNumber"] ?? "0";
           final imagePath = item["imageURL"] ?? "placeholder.jpg";
           final imageUrl =
-              "http://192.168.100.4/Advance_IMS/data/item_images/$id/${Uri.encodeComponent(imagePath)}";
+              imagePath.startsWith('http')
+                  ? imagePath
+                  : "http://192.168.100.4/Advance_IMS/data/item_images/$id/${Uri.encodeComponent(imagePath)}";
           final itemName = item["itemName"] ?? "Item";
           final stock = item["stock"] ?? "1 pc (500gm)";
           final price = item["unitPrice"] ?? "0";
